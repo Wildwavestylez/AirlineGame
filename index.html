@@ -91,12 +91,12 @@
 
         // Počet letadel a počet pasažérů na letadle
         let airplaneCount = 1;
-        let passengerCount = 5;
+        let passengerCount = 10;
         let flightInProgress = false;
         let playerDollars = 0;
 
         // Cena prvního letadla
-        let airplanePrice = 500;
+        let airplanePrice = 300;
 
         // Seznam letadel s jejich cílovou destinací a časovačem letu
         const airplanes = [];
@@ -261,7 +261,7 @@
 
         // Funkce pro inicializaci hry a generování cestujících každou sekundu
         function startGame() {
-            setInterval(updatePassengerList, 1000); // Generovat cestující každou sekundu
+            setInterval(updatePassengerList, 200); // Generovat cestující každou sekundu
 
             // Přidání poslání letadla na kliknutí
             const sendAirplaneButton = document.getElementById('send-airplane');
