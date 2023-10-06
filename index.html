@@ -9,6 +9,10 @@
             text-align: center;
         }
         
+        h1 {
+            margin-top: 20px;
+        }
+        
         #airport {
             display: flex;
             justify-content: space-between;
@@ -31,11 +35,41 @@
             padding: 5px;
             border: 1px solid #eee;
         }
+
+        #destinations {
+            margin-top: 20px;
+        }
+
+        #player-info {
+            margin-top: 20px;
+        }
     </style>
     <title>Letecká Společnost</title>
 </head>
 <body>
     <h1>Letecká Společnost</h1>
+    <div id="destinations">
+        <h2>Destinace letů</h2>
+        <label for="destination-select">Vyberte destinaci:</label>
+        <select id="destination-select">
+            <!-- Seznam destinací seřazený abecedně -->
+            <option value="Amsterdam">Amsterdam</option>
+            <option value="Atény">Atény</option>
+            <option value="Barcelona">Barcelona</option>
+            <!-- Zde zůstává seznam destinací, můžete přidat další -->
+        </select>
+        <input type="text" id="custom-destination" placeholder="Název vlastního letiště">
+        <button id="add-destination">Přidat letiště</button>
+        <button id="send-airplane">Poslat letadlo</button>
+    </div>
+    <div id="player-info">
+        <h2>Informace o hráči</h2>
+        <p>Herní dolary: <span id="player-dollars">0</span></p>
+        <p>Celkový počet letadel: <span id="total-airplanes">1</span></p>
+        <p>Počet letadel připravených vzlétnout: <span id="ready-airplanes">1</span></p>
+        <button id="buy-airplane">Koupit letadlo</button>
+        <span id="airplane-price">(500 $)</span>
+    </div>
     <div id="airport">
         <div id="flights">
             <h2>Seznam letů</h2>
@@ -50,71 +84,18 @@
             </ul>
         </div>
     </div>
-    <div id="destinations">
-        <h2>Destinace letů</h2>
-        <label for="destination-select">Vyberte destinaci:</label>
-        <select id="destination-select">
-            <!-- Seznam destinací seřazený abecedně -->
-            <option value="Amsterdam">Amsterdam</option>
-            <option value="Atény">Atény</option>
-            <option value="Barcelona">Barcelona</option>
-            <option value="Berlín">Berlín</option>
-            <option value="Budapešť">Budapešť</option>
-            <option value="Dubaj">Dubaj</option>
-            <option value="Helsinky">Helsinky</option>
-            <option value="Hongkong">Hongkong</option>
-            <option value="Istanbul">Istanbul</option>
-            <option value="Kapské Město">Kapské Město</option>
-            <option value="Kodaň">Kodaň</option>
-            <option value="Lima">Lima</option>
-            <option value="Lisabon">Lisabon</option>
-            <option value="Londýn">Londýn</option>
-            <option value="Los Angeles">Los Angeles</option>
-            <option value="Madrid">Madrid</option>
-            <option value="Mumbai">Mumbai</option>
-            <option value="New York">New York</option>
-            <option value="Oslo">Oslo</option>
-            <option value="Paříž">Paříž</option>
-            <option value="Peking">Peking</option>
-            <option value="Praha">Praha</option>
-            <option value="Rio de Janeiro">Rio de Janeiro</option>
-            <option value="Řím">Řím</option>
-            <option value="San Francisco">San Francisco</option>
-            <option value="Singapur">Singapur</option>
-            <option value="Stockholm">Stockholm</option>
-            <option value="Sydney">Sydney</option>
-            <option value="Tokio">Tokio</option>
-            <option value="Toronto">Toronto</option>
-            <option value="Vancouver">Vancouver</option>
-            <option value="Varšava">Varšava</option>
-            <option value="Vídeň">Vídeň</option>
-            <option value="Zurich">Zurich</option>
-            <!-- Přidat další destinace zde -->
-        </select>
-        <input type="text" id="custom-destination" placeholder="Název vlastního letiště">
-        <button id="add-destination">Přidat letiště</button>
-        <button id="send-airplane">Poslat letadlo</button>
-    </div>
-    <div id="player-info">
-        <h2>Informace o hráči</h2>
-        <p>Herní dolary: <span id="player-dollars">0</span></p>
-        <p>Celkový počet letadel: <span id="total-airplanes">1</span></p>
-        <p>Počet letadel připravených vzlétnout: <span id="ready-airplanes">1</span></p>
-        <button id="buy-airplane">Koupit letadlo</button>
-        <span id="airplane-price">(500 $)</span>
-    </div>
     <script>
         // Objekt pro uchování počtu cestujících pro každou destinaci
         const destinationPassengers = {};
 
         // Počet letadel a počet pasažérů na letadle
         let airplaneCount = 1;
-        let passengerCount = 5;
+        let passengerCount = 10;
         let flightInProgress = false;
         let playerDollars = 0;
 
         // Cena prvního letadla
-        let airplanePrice = 500;
+        let airplanePrice = 300;
 
         // Seznam letadel s jejich cílovou destinací a časovačem letu
         const airplanes = [];
@@ -276,7 +257,7 @@
 
         // Funkce pro inicializaci hry a generování cestujících každou sekundu
         function startGame() {
-            setInterval(updatePassengerList, 1000); // Generovat cestující každou sekundu
+            setInterval(updatePassengerList, 200); // Generovat cestující každou sekundu
 
             // Přidání poslání letadla na kliknutí
             const sendAirplaneButton = document.getElementById('send-airplane');
