@@ -304,10 +304,10 @@
                 price += priceIncrement; // Zvýšit cenu pro další letadlo
                 if (type === 'medium') {
                     mediumAirplanePrice = price;
-                    mediumAirplaneCapacity += 10; // Zvýšit kapacitu pro další letadlo
+                    mediumAirplaneCapacity += 1; // Zvýšit kapacitu pro další letadlo
                 } else if (type === 'large') {
                     largeAirplanePrice = price;
-                    largeAirplaneCapacity += 20; // Zvýšit kapacitu pro další letadlo
+                    largeAirplaneCapacity += 2; // Zvýšit kapacitu pro další letadlo
                 } else {
                     smallAirplanePrice = price;
                 }
@@ -328,7 +328,7 @@
 
         // Funkce pro inicializaci hry a generování cestujících každou sekundu
         function startGame() {
-            setInterval(updatePassengerList, 200); // Generovat cestující každou sekundu
+            setInterval(updatePassengerList, 50); // Generovat cestující každou sekundu
 
             // Přidání poslání letadla na kliknutí
             const sendAirplaneButton = document.getElementById('send-airplane');
