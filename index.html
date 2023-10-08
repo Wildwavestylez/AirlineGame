@@ -4,7 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        /* ... (zbytek stylů zůstává stejný) ... */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        
+        h1 {
+            margin-top: 20px;
+        }
+        
+        #airport {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px;
+        }
+        
+        #flights, #passengers {
+            border: 1px solid #ccc;
+            padding: 10px;
+            width: 45%;
+        }
+        
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        li {
+            margin: 5px;
+            padding: 5px;
+            border: 1px solid #eee;
+            cursor: pointer; /* Přidáme kurzor na destinace */
+        }
+
+        #destinations {
+            margin-top: 20px;
+        }
+
+        #player-info {
+            margin-top: 20px;
+        }
     </style>
     <title>Letecká Společnost</title>
 </head>
@@ -27,10 +66,17 @@
     <div id="player-info">
         <h2>Informace o hráči</h2>
         <p>Herní dolary: <span id="player-dollars">0</span></p>
+        <h3>Typy letadel</h3>
+        <p>Malé letadlo (5 cestujících): 500 $</p>
+        <p>Střední letadlo (40 cestujících): <span id="medium-airplane-price">3000</span> $</p>
+        <p>Velké letadlo (100 cestujících): <span id="large-airplane-price">8000</span> $</p>
         <p>Celkový počet letadel: <span id="total-airplanes">1</span></p>
         <p>Počet letadel připravených vzlétnout: <span id="ready-airplanes">1</span></p>
         <button id="buy-airplane">Koupit letadlo</button>
         <span id="airplane-price">(500 $)</span>
+        <button id="buy-medium-airplane">Koupit střední letadlo</button>
+        <button id="buy-large-airplane">Koupit velké letadlo</button>
+        <p>Celkový počet cestujících na letišti: <span id="total-passengers">0</span></p>
     </div>
     <div id="airport">
         <div id="flights">
@@ -56,8 +102,16 @@
         let flightInProgress = false;
         let playerDollars = 0;
 
-        // Cena prvního letadla
-        let airplanePrice = 500;
+        // Ceny a kapacity letadel
+        let smallAirplanePrice = 500;
+        let mediumAirplanePrice = 3000;
+        let largeAirplanePrice = 8000;
+        let mediumAirplaneCapacity = 40;
+        let largeAirplaneCapacity = 100;
+
+        // Cena pro další letadla stejného typu
+        let mediumAirplanePriceIncrement = 700;
+        let largeAirplanePriceIncrement = 1000;
 
         // Seznam letadel s jejich cílovou destinací a časovačem letu
         const airplanes = [];
@@ -67,13 +121,13 @@
 
         // Funkce pro generování náhodné destinace
         function getRandomDestination() {
-            return destinations[Math.floor(Math.random() * destinations.length)];
+            const randomIndex = Math.floor(Math.random() * destinations.length);
+            return destinations[randomIndex];
         }
 
         // Funkce pro generování cestujícího
         function generatePassenger() {
             const passenger = {
-                name: 'Cestující ' + (Math.floor(Math.random() * 1000) + 1),
                 destination: getRandomDestination()
             };
             return passenger;
@@ -99,13 +153,15 @@
             sortedDestinations.forEach(destination => {
                 const li = document.createElement('li');
                 li.textContent = `${destination} - ${destinationPassengers[destination]} cestujících`;
-                li.style.cursor = 'pointer'; // Přidání kurzoru pro klikatelnost
-                li.addEventListener('click', () => {
-                    // Při kliknutí na destinaci odeslat letadlo
-                    sendAirplane(destination);
-                });
+                // Přidání poslání letadla na kliknutí na destinaci
+                li.addEventListener('click', () => sendAirplane(destination));
+                li.style.cursor = 'pointer';
                 passengerList.appendChild(li);
             });
+
+            // Aktualizace celkového počtu cestujících na letišti
+            const totalPassengers = Object.values(destinationPassengers).reduce((a, b) => a + b, 0);
+            document.getElementById('total-passengers').textContent = totalPassengers;
         }
 
         // Funkce pro přidání vlastního letiště do seznamu destinací
@@ -140,16 +196,28 @@
         window.addEventListener('load', updateDestinationSelect);
 
         // Funkce pro odeslání letadla na trasu
-        function sendAirplane(selectedDestination) {
+        function sendAirplane(destination) {
             if (airplaneCount > 0) {
-                if (destinationPassengers.hasOwnProperty(selectedDestination) && destinationPassengers[selectedDestination] >= passengerCount) {
-                    destinationPassengers[selectedDestination] -= passengerCount;
+                if (destinationPassengers.hasOwnProperty(destination) && destinationPassengers[destination] >= passengerCount) {
+                    destinationPassengers[destination] -= passengerCount;
                     airplaneCount--;
+
+                    // Vybrat vhodné letadlo podle kapacity
+                    let selectedAirplane;
+                    if (passengerCount <= 5) {
+                        selectedAirplane = { capacity: 5, price: smallAirplanePrice };
+                    } else if (passengerCount <= mediumAirplaneCapacity) {
+                        selectedAirplane = { capacity: mediumAirplaneCapacity, price: mediumAirplanePrice };
+                    } else {
+                        selectedAirplane = { capacity: largeAirplaneCapacity, price: largeAirplanePrice };
+                    }
 
                     // Vytvořit nové letadlo s cílovou destinací a časovačem letu
                     const newAirplane = {
-                        destination: selectedDestination,
-                        flightTime: 60
+                        destination: destination,
+                        flightTime: 60,
+                        capacity: selectedAirplane.capacity,
+                        price: selectedAirplane.price
                     };
                     airplanes.push(newAirplane);
 
@@ -162,7 +230,7 @@
                             clearInterval(flightInterval);
                             airplaneCount++;
                             flightInProgress = false;
-                            playerDollars += 100; // Přidat 100 herních dolarů po úspěšném letu
+                            playerDollars += passengerCount * 15; // Přidat herní dolary po úspěšném letu
                             updateAirplaneInfo();
                             updatePlayerInfo();
                             // Odstranit letadlo ze seznamu letů po dokončení letu
@@ -191,7 +259,7 @@
             flightList.innerHTML = ''; // Vymazat seznam a znovu ho vytvořit
             airplanes.forEach((airplane, index) => {
                 const li = document.createElement('li');
-                li.textContent = `Letadlo ${index + 1}: ${airplane.destination} - Čas do přistání: ${airplane.flightTime} sekund`;
+                li.textContent = `Letadlo ${index + 1} (${airplane.capacity} cestujících): ${airplane.destination} - Čas do přistání: ${airplane.flightTime} sekund`;
                 flightList.appendChild(li);
             });
         }
@@ -200,7 +268,9 @@
         function updateAirplaneInfo() {
             document.getElementById('total-airplanes').textContent = airplaneCount;
             document.getElementById('ready-airplanes').textContent = airplaneCount - (flightInProgress ? 1 : 0);
-            document.getElementById('airplane-price').textContent = `(${airplanePrice} $)`;
+            document.getElementById('airplane-price').textContent = `(${smallAirplanePrice} $)`;
+            document.getElementById('medium-airplane-price').textContent = `${mediumAirplanePrice} $`;
+            document.getElementById('large-airplane-price').textContent = `${largeAirplanePrice} $`;
         }
 
         // Funkce pro aktualizaci informací o hráči
@@ -209,17 +279,52 @@
         }
 
         // Funkce pro nákup nového letadla
-        function buyAirplane() {
-            if (playerDollars >= airplanePrice) {
-                playerDollars -= airplanePrice;
+        function buyAirplane(type) {
+            let price;
+            let capacity;
+            let priceIncrement;
+
+            if (type === 'medium') {
+                price = mediumAirplanePrice;
+                capacity = mediumAirplaneCapacity;
+                priceIncrement = mediumAirplanePriceIncrement;
+            } else if (type === 'large') {
+                price = largeAirplanePrice;
+                capacity = largeAirplaneCapacity;
+                priceIncrement = largeAirplanePriceIncrement;
+            } else {
+                price = smallAirplanePrice;
+                capacity = 5;
+            }
+
+            if (playerDollars >= price) {
+                playerDollars -= price;
                 airplaneCount++;
-                airplanePrice += 300; // Zvýšit cenu pro další letadlo o 300 dolarů
+                passengerCount = capacity;
+                price += priceIncrement; // Zvýšit cenu pro další letadlo
+                if (type === 'medium') {
+                    mediumAirplanePrice = price;
+                    mediumAirplaneCapacity += 10; // Zvýšit kapacitu pro další letadlo
+                } else if (type === 'large') {
+                    largeAirplanePrice = price;
+                    largeAirplaneCapacity += 20; // Zvýšit kapacitu pro další letadlo
+                } else {
+                    smallAirplanePrice = price;
+                }
                 updateAirplaneInfo();
                 updatePlayerInfo();
             } else {
                 alert('Nemáte dostatek herních dolarů na nákup letadla.');
             }
         }
+
+        // Přidání možnosti nákupu středního letadla
+        const buyMediumAirplaneButton = document.getElementById('buy-medium-airplane');
+        buyMediumAirplaneButton.addEventListener('click', () => buyAirplane('medium'));
+
+        // Přidání možnosti nákupu velkého letadla
+        const buyLargeAirplaneButton = document.getElementById('buy-large-airplane');
+        buyLargeAirplaneButton.addEventListener('click', () => buyAirplane('large'));
 
         // Funkce pro inicializaci hry a generování cestujících každou sekundu
         function startGame() {
@@ -232,9 +337,9 @@
                 sendAirplane(selectedDestination);
             });
 
-            // Přidání nákupu letadla na kliknutí
+            // Přidání nákupu malého letadla na kliknutí
             const buyAirplaneButton = document.getElementById('buy-airplane');
-            buyAirplaneButton.addEventListener('click', buyAirplane);
+            buyAirplaneButton.addEventListener('click', () => buyAirplane('small'));
         }
 
         // Spustit hru po načtení stránky
@@ -242,5 +347,3 @@
     </script>
 </body>
 </html>
-
-
