@@ -106,7 +106,7 @@
         let smallAirplanePrice = 300;
         let mediumAirplanePrice = 3000;
         let largeAirplanePrice = 20000;
-        let mediumAirplaneCapacity = 40;
+        let mediumAirplaneCapacity = 15;
         let largeAirplaneCapacity = 100;
 
         // Cena pro další letadla stejného typu
@@ -304,10 +304,10 @@
                 price += priceIncrement; // Zvýšit cenu pro další letadlo
                 if (type === 'medium') {
                     mediumAirplanePrice = price;
-                    mediumAirplaneCapacity += 1; // Zvýšit kapacitu pro další letadlo
+                    mediumAirplaneCapacity += 0; // Zvýšit kapacitu pro další letadlo
                 } else if (type === 'large') {
                     largeAirplanePrice = price;
-                    largeAirplaneCapacity += 2; // Zvýšit kapacitu pro další letadlo
+                    largeAirplaneCapacity += 1; // Zvýšit kapacitu pro další letadlo
                 } else {
                     smallAirplanePrice = price;
                 }
