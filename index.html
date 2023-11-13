@@ -45,48 +45,48 @@
             margin-top: 20px;
         }
     </style>
-    <title>Letecká Společnost</title>
+    <title>TRAIN TYCOON</title>
 </head>
 <body>
-    <h1>Letecká Společnost</h1>
+    <h1>Railways Tycoon</h1>
     <div id="destinations">
-        <h2>Destinace letů</h2>
+        <h2>Destinace vlaků</h2>
         <label for="destination-select">Vyberte destinaci:</label>
         <select id="destination-select">
             <!-- Seznam destinací seřazený abecedně -->
-            <option value="Amsterdam">Amsterdam</option>
-            <option value="Atény">Atény</option>
-            <option value="Barcelona">Barcelona</option>
+            <option value="Strakonice">Strakonice</option>
+            <option value="Pracejovice">Pracejovice</option>
+            <option value="Katovice">Katovice</option>
             <!-- Zde zůstává seznam destinací, můžete přidat další -->
         </select>
         <input type="text" id="custom-destination" placeholder="Název vlastního letiště">
-        <button id="add-destination">Přidat letiště</button>
-        <button id="send-airplane">Poslat letadlo</button>
+        <button id="add-destination">Přidat nádraží</button>
+        <button id="send-airplane">Poslat vlak</button>
     </div>
     <div id="player-info">
         <h2>Informace o hráči</h2>
-        <p>Herní dolary: <span id="player-dollars">0</span></p>
-        <h3>Typy letadel</h3>
-        <p>Malé letadlo (5 cestujících): 500 $</p>
-        <p>Střední letadlo (40 cestujících): <span id="medium-airplane-price">3000</span> $</p>
-        <p>Velké letadlo (100 cestujících): <span id="large-airplane-price">8000</span> $</p>
-        <p>Celkový počet letadel: <span id="total-airplanes">1</span></p>
-        <p>Počet letadel připravených vzlétnout: <span id="ready-airplanes">1</span></p>
-        <button id="buy-airplane">Koupit letadlo</button>
+        <p>Finance: <span id="player-dollars">0</span></p>
+        <h3>Typy vlaků</h3>
+        <p>vlak řady 810 (20 cestujících): 500 $</p>
+        <p>Střední vlak (40 cestujících): <span id="medium-airplane-price">3000</span> $</p>
+        <p>Velký vlak (100 cestujících): <span id="large-airplane-price">8000</span> $</p>
+        <p>Celkový počet vlaků: <span id="total-airplanes">1</span></p>
+        <p>Počet vlaků připravených vyjet: <span id="ready-airplanes">1</span></p>
+        <button id="buy-airplane">Koupit vlak</button>
         <span id="airplane-price">(500 $)</span>
-        <button id="buy-medium-airplane">Koupit střední letadlo</button>
-        <button id="buy-large-airplane">Koupit velké letadlo</button>
-        <p>Celkový počet cestujících na letišti: <span id="total-passengers">0</span></p>
+        <button id="buy-medium-airplane">Koupit střední vlak</button>
+        <button id="buy-large-airplane">Koupit velký vlak</button>
+        <p>Celkový počet cestujících na nádraží: <span id="total-passengers">0</span></p>
     </div>
     <div id="airport">
         <div id="flights">
-            <h2>Seznam letů</h2>
+            <h2>Seznam tras</h2>
             <ul id="flight-list">
                 <!-- Zde budou zobrazeny lety -->
             </ul>
         </div>
         <div id="passengers">
-            <h2>Cestující na letišti</h2>
+            <h2>Cestující na nádraží</h2>
             <ul id="passenger-list">
                 <!-- Zde budou zobrazeni cestující -->
             </ul>
@@ -117,7 +117,7 @@
         const airplanes = [];
 
         // Seznam destinací
-        const destinations = ['Londýn', 'Paříž', 'Řím', 'Barcelona', 'Amsterdam', 'Berlín', 'New York', 'Los Angeles', 'Tokio', 'Peking', 'Moskva', 'Dubaj', 'Singapur', 'Hongkong', 'Sydney', 'Mumbai', 'Kapské Město', 'Rio de Janeiro', 'Buenos Aires', 'Lima', 'Mexico City', 'Toronto', 'Vancouver', 'Miami', 'Chicago', 'Las Vegas', 'Dallas', 'Denver', 'San Francisco', 'Seattle', 'Honolulu', 'Anchorage', 'Reykjavík', 'Oslo', 'Stockholm', 'Helsinky', 'Kodaň', 'Varšava', 'Budapešť', 'Praha', 'Vídeň', 'Zurich', 'Ženeva', 'Brusel', 'Amsterdam', 'Lisabon', 'Madrid', 'Atény', 'Istanbul'];
+        const destinations = ['Strakonice', 'Pracejovice', 'Katovice', ];
 
         // Funkce pro generování náhodné destinace
         function getRandomDestination() {
